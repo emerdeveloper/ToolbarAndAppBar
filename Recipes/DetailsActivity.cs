@@ -9,7 +9,9 @@ namespace Recipes
 	[Activity(Label = "DetailsActivity")]
 	public class DetailsActivity : Activity
 	{
-		Recipe recipe;
+        // Field declaration
+        Android.Support.V7.Widget.Toolbar toolbar;
+        Recipe recipe;
 		ArrayAdapter adapter;
 
 		protected override void OnCreate(Bundle savedInstanceState)
@@ -17,17 +19,21 @@ namespace Recipes
 			base.OnCreate(savedInstanceState);
 			SetContentView(Resource.Layout.Details);
 
+            // Element lookup
+            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            //toolbar.SetLogo(Resource.Drawable.ic_local_dining_white_24dp);
 			//
 			// Retrieve the recipe to be displayed on this page
 			//
 			int index = Intent.GetIntExtra("RecipeIndex", -1);
 			recipe = RecipeData.Recipes[index];
+            toolbar.Title = recipe.Name;// Show the recipe name
 
-			//
-			// Show the recipe name
-			//
-			var name = FindViewById<TextView>(Resource.Id.nameTextView);
-			name.Text = recipe.Name;
+            //
+            // Show the recipe name
+            //
+            //var name = FindViewById<TextView>(Resource.Id.nameTextView);
+			//name.Text = recipe.Name;
 
 			//
 			// Show the list of ingredients
