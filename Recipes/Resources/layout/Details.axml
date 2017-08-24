@@ -64,12 +64,12 @@
             android:layout_height="wrap_content"
             android:text="4" />
     </LinearLayout> -->
-<!-- Replace in Exercise 5 -->
+<!-- Replace in Exercise 5 
     <ImageButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_back_white_24dp" />
+        android:src="@drawable/ic_arrow_back_white_24dp" />-->
     <ListView
         android:id="@+id/ingredientsListView"
         android:layout_width="match_parent"

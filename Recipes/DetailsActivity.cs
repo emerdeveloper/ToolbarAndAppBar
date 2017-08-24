@@ -17,22 +17,26 @@ namespace Recipes
         Recipe recipe;
 		ArrayAdapter adapter;
 
-		protected override void OnCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.Details);
-            //During Activity creation, call SetSupportActionBar to install your Toolbar as your Activity's app bar
-            base.SetSupportActionBar(toolbar);
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Details);
 
             // Element lookup
             toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             //toolbar.SetLogo(Resource.Drawable.ic_local_dining_white_24dp);
-			//
-			// Retrieve the recipe to be displayed on this page
-			//
-			int index = Intent.GetIntExtra("RecipeIndex", -1);
-			recipe = RecipeData.Recipes[index];
+            //
+            // Retrieve the recipe to be displayed on this page
+            //
+            int index = Intent.GetIntExtra("RecipeIndex", -1);
+            recipe = RecipeData.Recipes[index];
             toolbar.Title = recipe.Name;// Show the recipe name
+            //During Activity creation, call SetSupportActionBar to install your Toolbar as your Activity's app bar
+            base.SetSupportActionBar(toolbar);
+            //enables the navigation button within the app bar
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            //specifies the icon we want the button to display.
+            SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_arrow_back_white_24dp);
             //inflate a toolbar with elements create in XML file
             //toolbar.InflateMenu(Resource.Menu.actions);
             //Subscribe to the toolbar's MenuItemClick event.
@@ -67,7 +71,7 @@ namespace Recipes
 			//
 			// Navigation button: navigate back to the previous page
 			//
-			FindViewById<ImageButton>(Resource.Id.backButton).Click += (sender, e) => Finish();
+			//FindViewById<ImageButton>(Resource.Id.backButton).Click += (sender, e) => Finish();
 
 			//
 			// Navigation button: navigate forward to the About page
@@ -105,6 +109,9 @@ namespace Recipes
                 case Resource.Id.fourServings:
                     SetServings(4);
                     item.SetCheckable(true);
+                    break;
+                case Android.Resource.Id.Home:
+                    Finish();
                     break;
             }
             return true;
