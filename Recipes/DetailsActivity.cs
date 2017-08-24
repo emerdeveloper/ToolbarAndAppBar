@@ -4,12 +4,13 @@ using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Support.V7.Widget;
+using Android.Views;
 using Android.Widget;
 
 namespace Recipes
 {
 	[Activity(Label = "DetailsActivity")]
-	public class DetailsActivity : Activity
+	public class DetailsActivity : Android.Support.V7.App.AppCompatActivity
 	{
         // Field declaration
         Android.Support.V7.Widget.Toolbar toolbar;
@@ -20,6 +21,8 @@ namespace Recipes
 		{
 			base.OnCreate(savedInstanceState);
 			SetContentView(Resource.Layout.Details);
+            //During Activity creation, call SetSupportActionBar to install your Toolbar as your Activity's app bar
+            base.SetSupportActionBar(toolbar);
 
             // Element lookup
             toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
@@ -31,9 +34,9 @@ namespace Recipes
 			recipe = RecipeData.Recipes[index];
             toolbar.Title = recipe.Name;// Show the recipe name
             //inflate a toolbar with elements create in XML file
-            toolbar.InflateMenu(Resource.Menu.actions);
+            //toolbar.InflateMenu(Resource.Menu.actions);
             //Subscribe to the toolbar's MenuItemClick event.
-            toolbar.MenuItemClick += OnMenuItemClick;
+            //toolbar.MenuItemClick += OnMenuItemClick;
 
             //
             // Show the recipe name
@@ -52,7 +55,7 @@ namespace Recipes
 			//
 			//var toggle = FindViewById<ToggleButton>(Resource.Id.favoriteButton);
 			//toggle.CheckedChange += OnFavoriteCheckedChange;
-		    SetFavoriteDrawable(recipe.IsFavorite);
+		    //SetFavoriteDrawable(recipe.IsFavorite);
 
 			//
 			// Set up the "Number of servings" buttons
@@ -71,9 +74,44 @@ namespace Recipes
 			//
 			//FindViewById<Button>(Resource.Id.aboutButton).Click += (sender, e) => StartActivity(typeof(AboutActivity));
 		}
+        //  Override OnCreateOptionsMenu to populate your Toolbar's actions
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            base.MenuInflater.Inflate(Resource.Menu.actions, menu);
+            SetFavoriteDrawable(recipe.IsFavorite);
+            return true;
+        }
+
+        //Override OnOptionsItemSelected to respond to app bar item click
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)//Identifies which item the user selected
+            {
+                case Resource.Id.addToFavorites:
+                    recipe.IsFavorite = !recipe.IsFavorite;
+                    SetFavoriteDrawable(recipe.IsFavorite);
+                    break;
+                case Resource.Id.about:
+                    StartActivity(typeof(AboutActivity));
+                    break;
+                case Resource.Id.oneServing:
+                    SetServings(1);
+                    item.SetCheckable(true);
+                    break;
+                case Resource.Id.twoServings:
+                    SetServings(2);
+                    item.SetCheckable(true);
+                    break;
+                case Resource.Id.fourServings:
+                    SetServings(4);
+                    item.SetCheckable(true);
+                    break;
+            }
+            return true;
+        }
 
         #region Methods
-        private void OnMenuItemClick(object sender, Android.Support.V7.Widget.Toolbar.MenuItemClickEventArgs e)
+        /*private void OnMenuItemClick(object sender, Android.Support.V7.Widget.Toolbar.MenuItemClickEventArgs e)
         {//switch statement that tests the value of the parameter e.Item.ItemId. This will be the id of the menu items defined in the XML file.
             switch (e.Item.ItemId) {
                 case Resource.Id.addToFavorites:
@@ -96,7 +134,7 @@ namespace Recipes
                     e.Item.SetCheckable(true);
                     break;
             }
-        }
+        }*/
 
         //
         // Handler for the 'favorite' toggle button
