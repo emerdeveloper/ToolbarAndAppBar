@@ -1,7 +1,9 @@
+using System;
 using Android.App;
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Support.V7.Widget;
 using Android.Widget;
 
 namespace Recipes
@@ -28,25 +30,29 @@ namespace Recipes
 			int index = Intent.GetIntExtra("RecipeIndex", -1);
 			recipe = RecipeData.Recipes[index];
             toolbar.Title = recipe.Name;// Show the recipe name
+            //inflate a toolbar with elements create in XML file
+            toolbar.InflateMenu(Resource.Menu.actions);
+            //Subscribe to the toolbar's MenuItemClick event.
+            toolbar.MenuItemClick += OnMenuItemClick;
 
             //
             // Show the recipe name
             //
             //var name = FindViewById<TextView>(Resource.Id.nameTextView);
-			//name.Text = recipe.Name;
+            //name.Text = recipe.Name;
 
-			//
-			// Show the list of ingredients
-			//
-			var list = FindViewById<ListView>(Resource.Id.ingredientsListView);
+            //
+            // Show the list of ingredients
+            //
+            var list = FindViewById<ListView>(Resource.Id.ingredientsListView);
 			list.Adapter = adapter = new ArrayAdapter<Ingredient>(this, Android.Resource.Layout.SimpleListItem1, recipe.Ingredients);
 
 			//
 			// Set up the "Favorite" toggle, we use different images for the 'on' and 'off' states
 			//
-			var toggle = FindViewById<ToggleButton>(Resource.Id.favoriteButton);
-			toggle.CheckedChange += OnFavoriteCheckedChange;
-			SetFavoriteDrawable(recipe.IsFavorite);
+			//var toggle = FindViewById<ToggleButton>(Resource.Id.favoriteButton);
+			//toggle.CheckedChange += OnFavoriteCheckedChange;
+		    SetFavoriteDrawable(recipe.IsFavorite);
 
 			//
 			// Set up the "Number of servings" buttons
@@ -63,49 +69,73 @@ namespace Recipes
 			//
 			// Navigation button: navigate forward to the About page
 			//
-			FindViewById<Button>(Resource.Id.aboutButton).Click += (sender, e) => StartActivity(typeof(AboutActivity));
+			//FindViewById<Button>(Resource.Id.aboutButton).Click += (sender, e) => StartActivity(typeof(AboutActivity));
 		}
 
-		//
-		// Handler for the 'favorite' toggle button
-		//
-		void OnFavoriteCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
-		{
-			recipe.IsFavorite = e.IsChecked; // update the recipe's state
+        #region Methods
+        private void OnMenuItemClick(object sender, Android.Support.V7.Widget.Toolbar.MenuItemClickEventArgs e)
+        {//switch statement that tests the value of the parameter e.Item.ItemId. This will be the id of the menu items defined in the XML file.
+            switch (e.Item.ItemId) {
+                case Resource.Id.addToFavorites:
+                    recipe.IsFavorite = !recipe.IsFavorite;
+                    SetFavoriteDrawable(recipe.IsFavorite);
+                    break;
+                case Resource.Id.about:
+                    StartActivity(typeof(AboutActivity));
+                    break;
+            }
+        }
 
-			SetFavoriteDrawable(e.IsChecked); // toggle the image used on the button
-		}
+        //
+        // Handler for the 'favorite' toggle button
+        //
+        /*void OnFavoriteCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            recipe.IsFavorite = e.IsChecked; // update the recipe's state
 
-		void SetFavoriteDrawable(bool isFavorite)
-		{
-			Drawable drawable = null;
+            SetFavoriteDrawable(e.IsChecked); // toggle the image used on the button
+        }*/
 
-			if (isFavorite)
-				drawable = base.GetDrawable(Resource.Drawable.ic_favorite_white_24dp); // filled in 'heart' image
-			else
-				drawable = base.GetDrawable(Resource.Drawable.ic_favorite_border_white_24dp); // 'heart' image border only
+        void SetFavoriteDrawable(bool isFavorite)
+        {
 
-			FindViewById<ToggleButton>(Resource.Id.favoriteButton).SetCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-		}
-		// Note: base.GetDrawable requires API level 21
-		// To run on earlier versions, change the minimum API level in the project settings and use the following code:
-		//void SetFavoriteDrawables(bool isFavorite)
-		//{
-		//	Drawable drawable = null;
-		//
-		//	if (isFavorite)
-		//		drawable = Resources.GetDrawable(Resource.Drawable.ic_favorite_white_24dp);
-		//	else
-		//		drawable = Resources.GetDrawable(Resource.Drawable.ic_favorite_border_white_24dp);
-		//
-		//	FindViewById<ToggleButton>(Resource.Id.favoriteButton).SetCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-		//}
+            if (isFavorite)
+            {
+                toolbar.Menu.FindItem(Resource.Id.addToFavorites).SetIcon(Resource.Drawable.ic_favorite_white_24dp);
+            }
+            else {
+                toolbar.Menu.FindItem(Resource.Id.addToFavorites).SetIcon(Resource.Drawable.ic_favorite_border_white_24dp);
+            }
 
-		void SetServings(int numServings)
-		{
-			recipe.NumServings = numServings;
+            /*Drawable drawable = null;
 
-			adapter.NotifyDataSetChanged();
-		}
-	}
+            if (isFavorite)
+                drawable = base.GetDrawable(Resource.Drawable.ic_favorite_white_24dp); // filled in 'heart' image
+            else
+                drawable = base.GetDrawable(Resource.Drawable.ic_favorite_border_white_24dp); // 'heart' image border only
+
+            FindViewById<ToggleButton>(Resource.Id.favoriteButton).SetCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);*/
+        }
+        // Note: base.GetDrawable requires API level 21
+        // To run on earlier versions, change the minimum API level in the project settings and use the following code:
+        //void SetFavoriteDrawables(bool isFavorite)
+        //{
+        //	Drawable drawable = null;
+        //
+        //	if (isFavorite)
+        //		drawable = Resources.GetDrawable(Resource.Drawable.ic_favorite_white_24dp);
+        //	else
+        //		drawable = Resources.GetDrawable(Resource.Drawable.ic_favorite_border_white_24dp);
+        //
+        //	FindViewById<ToggleButton>(Resource.Id.favoriteButton).SetCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+        //}
+
+        void SetServings(int numServings)
+        {
+            recipe.NumServings = numServings;
+
+            adapter.NotifyDataSetChanged();
+        } 
+        #endregion
+    }
 }
