@@ -57,9 +57,9 @@ namespace Recipes
 			//
 			// Set up the "Number of servings" buttons
 			//
-			FindViewById<Button>(Resource.Id.oneServingButton).Click   += (sender, e) => SetServings(1);
+			/*FindViewById<Button>(Resource.Id.oneServingButton).Click   += (sender, e) => SetServings(1);
 			FindViewById<Button>(Resource.Id.twoServingsButton).Click  += (sender, e) => SetServings(2);
-			FindViewById<Button>(Resource.Id.fourServingsButton).Click += (sender, e) => SetServings(4);
+			FindViewById<Button>(Resource.Id.fourServingsButton).Click += (sender, e) => SetServings(4);*/
 
 			//
 			// Navigation button: navigate back to the previous page
@@ -82,6 +82,18 @@ namespace Recipes
                     break;
                 case Resource.Id.about:
                     StartActivity(typeof(AboutActivity));
+                    break;
+                case Resource.Id.oneServing:
+                    SetServings(1);
+                    e.Item.SetCheckable(true);
+                    break;
+                case Resource.Id.twoServings:
+                    SetServings(2);
+                    e.Item.SetCheckable(true);
+                    break;
+                case Resource.Id.fourServings:
+                    SetServings(4);
+                    e.Item.SetCheckable(true);
                     break;
             }
         }
@@ -136,6 +148,7 @@ namespace Recipes
 
             adapter.NotifyDataSetChanged();
         } 
+
         #endregion
     }
 }

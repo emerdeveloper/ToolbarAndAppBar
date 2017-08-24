@@ -44,7 +44,7 @@
             android:layout_gravity="center"
             android:text="About" />
     </LinearLayout>-->
-<!-- Replace in Exercise 3 -->
+<!-- Replace in Exercise 3 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4" />
-    </LinearLayout>
+    </LinearLayout> -->
 <!-- Replace in Exercise 5 -->
     <ImageButton
         android:id="@+id/backButton"
